@@ -684,6 +684,7 @@ def diverse_model(score_llms) -> dict:
         "llms": score_llms(
             {
                 "model": "deepseek/deepseek-chat-v3.1",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 5,
                 "provider": {"only": ["Fireworks"]},
@@ -692,6 +693,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "meta-llama/llama-3.3-70b-instruct",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 5,
                 "provider": {"only": ["Fireworks"]},
@@ -700,6 +702,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "moonshotai/kimi-k2-0905",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 5,
                 "provider": {"only": ["Fireworks"]},
@@ -708,6 +711,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "qwen/qwen2.5-vl-32b-instruct",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 5,
                 "provider": {"only": ["Fireworks"]},
@@ -716,6 +720,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "deepseek/deepseek-chat-v3-0324",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 5,
                 "provider": {"only": ["Fireworks"]},
@@ -724,6 +729,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "openai/gpt-4o",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 20,
             }
@@ -731,6 +737,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "openai/gpt-4o-mini",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "top_logprobs": 20,
             }
@@ -738,24 +745,28 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "x-ai/grok-4-fast",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
             }
         )
         + score_llms(
             {
                 "model": "google/gemini-2.0-flash-001",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
             }
         )
         + score_llms(
             {
                 "model": "google/gemini-2.5-flash-lite",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
             }
         )
         + score_llms(
             {
                 "model": "meta-llama/llama-4-maverick",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "provider": {"require_parameters": True},
             }
@@ -763,6 +774,7 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "mistralai/mistral-small-3.2-24b-instruct",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
                 "provider": {"require_parameters": True},
             }
@@ -770,12 +782,14 @@ def diverse_model(score_llms) -> dict:
         + score_llms(
             {
                 "model": "mistralai/mistral-medium-3.1",
+                "output_mode": "json_schema",
                 "weight": {"type": "static", "weight": 10},
             }
         )
         + score_llms(
             {
                 "model": "anthropic/claude-haiku-4.5",
+                "output_mode": "tool_call",
                 "weight": {"type": "static", "weight": 10},
                 "tool_response_format": True,
             }
