@@ -459,7 +459,7 @@ async def process_chat_completion_rows_chunk(
     provider_ignore: list[str] | None,
     df: pd.DataFrame,
     start_index: int = 0,
-) -> Tuple[float, Tuple[float, int] | None]:
+) -> Tuple[Tuple[float, int], Tuple[float, int] | None]:
     futures = []
     for _, row in df.iloc[start_index : start_index + row_chunk_size].iterrows():
         futures.append(
@@ -481,7 +481,10 @@ async def process_chat_completion_rows_chunk(
             correctness.append(result)
     correctness_divergent = [c for c in correctness if c > 0 and c < 1]
     return [
-        sum(correctness) / len(correctness),
+        [
+            sum(correctness) / len(correctness),
+            len(correctness),
+        ],
         (
             [
                 sum(correctness_divergent) / len(correctness_divergent),
@@ -499,7 +502,7 @@ async def process_score_completion_rows_chunk(
     chat_model: List[str],
     df: pd.DataFrame,
     start_index: int = 0,
-) -> Tuple[float, Tuple[float, int] | None]:
+) -> Tuple[Tuple[float, int], Tuple[float, int] | None]:
     futures = []
     for _, row in df.iloc[start_index : start_index + row_chunk_size].iterrows():
         futures.append(
@@ -521,7 +524,10 @@ async def process_score_completion_rows_chunk(
             if result[1]:
                 correctness_divergent.append(result[0])
     return [
-        sum(correctness) / len(correctness),
+        [
+            sum(correctness) / len(correctness),
+            len(correctness),
+        ],
         (
             [
                 sum(correctness_divergent) / len(correctness_divergent),
@@ -555,7 +561,8 @@ async def process_chat_completion_rows(
                     df,
                     start_index,
                 )
-                correctness.append(result[0])
+                for _ in range(result[0][1]):
+                    correctness.append(result[0][0])
                 if result[1]:
                     for _ in range(result[1][1]):
                         correctness_divergent.append(result[1][0])
@@ -592,7 +599,8 @@ async def process_score_completion_rows(
                     df,
                     start_index,
                 )
-                correctness.append(result[0])
+                for _ in range(result[0][1]):
+                    correctness.append(result[0][0])
                 if result[1]:
                     for _ in range(result[1][1]):
                         correctness_divergent.append(result[1][0])
@@ -642,6 +650,7 @@ async def main():
             "llms": [
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -652,6 +661,7 @@ async def main():
                 },
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -662,6 +672,7 @@ async def main():
                 },
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -684,6 +695,7 @@ async def main():
             "llms": [
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -691,6 +703,7 @@ async def main():
                 },
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -698,6 +711,7 @@ async def main():
                 },
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -717,6 +731,7 @@ async def main():
             "llms": [
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -727,6 +742,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -737,6 +753,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -759,6 +776,7 @@ async def main():
             "llms": [
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -769,6 +787,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -779,6 +798,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -801,6 +821,7 @@ async def main():
             "llms": [
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -812,6 +833,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -823,6 +845,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -846,6 +869,7 @@ async def main():
             "llms": [
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -857,6 +881,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -868,6 +893,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -891,6 +917,7 @@ async def main():
             "llms": [
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -901,6 +928,7 @@ async def main():
                 },
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -911,6 +939,7 @@ async def main():
                 },
                 {
                     "model": "openai/gpt-5-mini",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -921,6 +950,7 @@ async def main():
                 },
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -931,6 +961,7 @@ async def main():
                 },
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -941,6 +972,7 @@ async def main():
                 },
                 {
                     "model": "google/gemini-2.5-flash",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -963,6 +995,7 @@ async def main():
             "llms": [
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -973,6 +1006,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -983,6 +1017,7 @@ async def main():
                 },
                 {
                     "model": "meta-llama/llama-4-maverick",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -1005,6 +1040,7 @@ async def main():
             "llms": [
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -1016,6 +1052,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
@@ -1027,6 +1064,7 @@ async def main():
                 },
                 {
                     "model": "deepseek/deepseek-chat-v3.1",
+                    "output_mode": "json_schema",
                     "weight": {
                         "type": "static",
                         "weight": 10,
