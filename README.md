@@ -9,7 +9,7 @@ This repository contains verifiable & reproducible benchmarks which attempt to p
 
 Each directory wthin the repository contains a script for running the benchmark, the results of the benchmark, and a writeup for the results.
 
-## Humanity's Last Exam benchmark
+## Humanity's Last Exam
 
 We demonstrate that a Score Model can increase correctness on Humanity's Last Exam beyond what the LLM inside the Score Model would typically be capable of.
 
