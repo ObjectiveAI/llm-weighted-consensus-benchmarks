@@ -9,8 +9,18 @@ This repository contains verifiable & reproducible benchmarks which attempt to p
 
 Each directory wthin the repository contains a script for running the benchmark, the results of the benchmark, and a writeup for the results.
 
-With our Humanity's Last Exam benchmark, we demonstrate that a Score Model can increase correctness on Humanity's Last Exam beyond what the LLM inside the Score Model would typically be capable of.
+## Humanity's Last Exam benchmark
 
-With our Poll Approximation benchmark, we contrast between using a traditional LLM to approximate or guess Gallup Poll results and using a Score Model to simulate the poll itself.
+We demonstrate that a Score Model can increase correctness on Humanity's Last Exam beyond what the LLM inside the Score Model would typically be capable of.
 
-With our IT Ticket Classification benchmark, we demonstrate that a Score Model can simultaneously increase correctness for the task while being cheaper than a traditional LLM.
+We also demonstrate that composing the Score Model of heterogeneous LLMs can exceed the individual capabilities of those within it, even when some of those LLMs are individually less correct than others.
+
+## Poll Approximation
+
+We contrast between:
+- Using a traditional LLM to approximate or guess Gallup Poll results.
+- Using a Score Model to simulate the poll itself.
+
+## IT Ticket Classification
+
+We demonstrate that a Score Model can simultaneously increase correctness for the task while being cheaper than a traditional LLM.
