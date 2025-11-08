@@ -5,11 +5,15 @@ First, we divide the full list of questions into a subset of 512:
 - We filter out questions with images for cost reasons, and to allow testing LLMs which do not support input images.
 - We filter out question `677b26a903cb2e13f2c755ef` because it often triggers the content filter of various LLMs.
 
+##
+
 For Chat Completions, we use a response format of type `json_schema` in order to make the letter choice machine parsable. This schema includes two properties, one for `answer` and one for `answer_letter`. Importantly, `answer_letter` comes last. We also run each question 3 separate times for each LLM we're testing. We measure accuracy by tallying up all `512*3` answers, dividing the total number of correct answers by the total number of answers.
 
 First, we run the set of questions with `openai/gpt-5-mini` using `reasoning.effort: "medium"`. This results in an accuracy of `18.88%`. Of the 512 questions, all 3 answers were either unanimously correct or incorrect for 409 questions, and varied for 103 questions. Of the 103, accuracy was 47.25%.
 
 Next, we run the set of questions with `google/gemini-2.5-flash` using `reasoning.max_tokens: 8192`. This results in an accuracy of `13.80%`. Of the 512 questions, all 3 answers were either unanimously correct or incorrect for 412 questions, and varied for 100 questions. Of the 100, accuracy was 43.67%.
+
+##
 
 For Score Completions, each LLM inside of the Score Model uses `output_mode: "json_schema"`. Since a Score Completion works by scoring a set of choices for a given prompt, the choices we provide are the answers that the Chat Completions generated, which, importantly, include the generated chain-of-thought reasoning preceding the final answer. We measure correctness by taking the Confidence of the choices containing the answers which were correct.
 
@@ -24,6 +28,8 @@ Next, we run the 100 questions which `google/gemini-2.5-flash` varied in correct
 Next, we run the 103 questions which `openai/gpt-5-mini` varied in correctness on with a Score Model hereby dubbed `deepseek-chat-v3.1-x3-logprobs-nothink`. This Score Model contains three instances of `deepseek/deepseek-chat-v3.1` with reasoning disabled using `top_logprobs: 5`. Logprobs change the behavior of LLMs within a Score Model to instead vote as a probability distribution. This Score Model decreases accuracy to 18.41% overall, and 44.92% for the 103 varied answers. This demonstrates that not all Score Models increase accuracy.
 
 Next, we run the 100 questions which `google/gemini-2.5-flash` varied in correctness on with `deepseek-chat-v3.1-x3-logprobs-nothink`. This Score Model increases accuracy to 14.31% overall, and 46.27% for the 100 varied answers.
+
+##
 
 For the remaining Score Model runs, we combine the Chat Completion answers of `openai/gpt-5-mini` and `google/gemini-2.5-flash`. The average accuracy of this combination is 16.34%. Of the 512 questions, the 6 answers varied in correctness for 212 questions.
 
